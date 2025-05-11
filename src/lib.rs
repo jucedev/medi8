@@ -12,7 +12,7 @@ pub trait RequestHandler<R: Request, Resp>: 'static {
 }
 
 /// Processes a notification
-pub trait NotificationHandler<N: Notification>: Send + Sync {
+pub trait NotificationHandler<N: Notification>: 'static {
     fn handle(&self, notification: N);
 }
 
@@ -65,7 +65,7 @@ impl Mediator {
         let handler: Box<dyn NotificationHandler<N>> = Box::new(handler);
 
         // Box it again as 'Any' so we can downcast it safely later
-        entry.push(Box::new(handler) as Box<dyn Any>);
+        entry.push(Box::new(handler));
     }
 
     /// Dispatch a request to the appropriate handler, and return the response
